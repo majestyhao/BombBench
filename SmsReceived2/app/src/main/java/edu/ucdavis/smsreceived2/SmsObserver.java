@@ -1,12 +1,10 @@
 package edu.ucdavis.smsreceived2;
 
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Handler;
 import android.os.Message;
 import android.telephony.TelephonyManager;
 import android.util.Log;

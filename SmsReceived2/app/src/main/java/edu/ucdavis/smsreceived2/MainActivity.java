@@ -5,6 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+/**
+ * Class: MainActivity
+ * Description: Leaking when receive SMS from certain Sender
+ * Authors: Hao Fu(haofu@ucdavis.edu)
+ * Date: 7/1/2016 3:54 PM
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Override
