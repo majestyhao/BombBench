@@ -9,7 +9,7 @@ import android.util.Log;
 
 /**
  * Class: MainActivity
- * Description:
+ * Description: Leaking when Japanese
  * Authors: Hao Fu(haofu@ucdavis.edu)
  * Date: 7/4/2016 2:42 PM
  */
